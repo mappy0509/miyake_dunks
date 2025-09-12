@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三宅DUNKS | ミニバスケットボールチーム公式サイト</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Swiper.jsのCSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <!-- AOS (Animate On Scroll)のCSS -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .hero-bg {
+            /* [体育館のバスケットボールコートの画像] */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .bg-pattern {
+            background-color: #111827;
+            background-image:
+                radial-gradient(circle at 1px 1px, #39ff14 1px, transparent 0);
+            background-size: 20px 20px;
+        }
+        /* Swiper.jsのカスタムスタイル */
+        .swiper-button-next,
+        .swiper-button-prev {
+            color: #39ff14; /* 矢印の色 */
+        }
+        .swiper-pagination-bullet-active {
+            background-color: #39ff14; /* アクティブなページネーションドットの色 */
+        }
+        .swiper-slide {
+            height: auto; /* 高さを自動調整 */
+            display: flex;
+            justify-content: center;
+            padding-bottom: 40px; /* ページネーションとの余白 */
+        }
+
+        /* レスポンシブな文字サイズ設定 (Fluid Typography) */
+        .text-fluid-hero { font-size: clamp(3rem, 1.5rem + 8vw, 6rem); }
+        .text-fluid-subtitle { font-size: clamp(1rem, 0.8rem + 1vw, 1.5rem); }
+        .text-fluid-h2 { font-size: clamp(2rem, 1.5rem + 2.5vw, 2.5rem); }
+        .text-fluid-h3 { font-size: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem); }
+        .text-fluid-h3-alt { font-size: clamp(1.75rem, 1.25rem + 2vw, 2.25rem); }
+        .text-fluid-item-title { font-size: clamp(1.125rem, 1rem + 0.5vw, 1.25rem); }
+        .text-fluid-body { font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem); }
+        .text-fluid-button { font-size: clamp(1rem, 0.9rem + 0.5vw, 1.125rem); }
+        .text-fluid-button-lg { font-size: clamp(1.125rem, 1rem + 0.5vw, 1.25rem); }
+
+        /* --- モバイルメニューアニメーション --- */
+        #mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        #mobile-menu.menu-open {
+            max-height: 500px; /* メニューの高さより大きい値 */
+        }
+        
+        /* ハンバーガーアイコンアニメーション */
+        .line {
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            transform-origin: center;
+        }
+        #mobile-menu-button.open .line-top {
+            transform: translateY(6px) rotate(45deg);
+        }
+        #mobile-menu-button.open .line-middle {
+            opacity: 0;
+        }
+        #mobile-menu-button.open .line-bottom {
+            transform: translateY(-6px) rotate(-45deg);
+        }
+
+        /* --- スマホ表示用のヒーロー背景 --- */
+        @media (max-width: 768px) {
+            .hero-bg {
+                /* [縦長のバスケットボールコートの画像] */
+                background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1577413499421-2f01d4d0a31c?q=80&w=1287&auto=format&fit=crop');
+                /* fixedはスマホで表示が崩れることがあるためscrollに変更 */
+                background-attachment: scroll;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+
+    <!-- Header -->
+    <header class="bg-black/80 backdrop-blur-sm sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center p-4">
+            <a href="#" class="text-3xl font-black text-[#39ff14]">
+                三宅DUNKS
+            </a>
+            <nav class="hidden md:flex items-center space-x-4">
+                <a href="#about" class="hover:text-[#39ff14] transition-colors duration-300 whitespace-nowrap">チーム紹介</a>
+                <a href="#practice" class="hover:text-[#39ff14] transition-colors duration-300 whitespace-nowrap">活動内容</a>
+                <a href="#news" class="hover:text-[#39ff14] transition-colors duration-300 whitespace-nowrap">ニュース</a>
+                <a href="#members" class="hover:text-[#39ff14] transition-colors duration-300 whitespace-nowrap">メンバー紹介</a>
+                <a href="#sponsors" class="hover:text-[#39ff14] transition-colors duration-300 whitespace-nowrap">スポンサー募集</a>
+                <a href="#contact" class="hover:text-[#39ff14] transition-colors duration-300 whitespace-nowrap">お問い合わせ</a>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-transparent">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path class="line line-top" d="M4 6h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    <path class="line line-middle" d="M4 12h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    <path class="line line-bottom" d="M4 18h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                </svg>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden">
+            <a href="#about" class="block py-2 px-4 text-sm hover:bg-gray-800">チーム紹介</a>
+            <a href="#practice" class="block py-2 px-4 text-sm hover:bg-gray-800">活動内容</a>
+            <a href="#news" class="block py-2 px-4 text-sm hover:bg-gray-800">ニュース</a>
+            <a href="#members" class="block py-2 px-4 text-sm hover:bg-gray-800">メンバー紹介</a>
+            <a href="#sponsors" class="block py-2 px-4 text-sm hover:bg-gray-800">スポンサー募集</a>
+            <a href="#contact" class="block py-2 px-4 text-sm hover:bg-gray-800">お問い合わせ</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-bg h-screen flex items-center justify-center text-center -mt-16">
+            <div class="bg-black/50 p-8 rounded-lg" data-aos="zoom-in" data-aos-duration="1000">
+                <h1 class="text-fluid-hero font-black uppercase tracking-wider leading-tight">
+                    WE ARE<br>
+                    <span class="text-[#39ff14]">三宅</span><br>
+                    <span class="text-[#39ff14]">DUNKS</span>
+                </h1>
+                <p class="text-fluid-subtitle mt-4 text-gray-300">福岡市で活動するミニバスケットボールチーム</p>
+                <a href="#about" class="text-fluid-button mt-8 inline-block bg-[#39ff14] text-black font-bold py-3 px-8 rounded-full hover:bg-white transition-all duration-300 transform hover:scale-105">
+                    チームについて知る
+                </a>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-20 bg-gray-900">
+            <div class="container mx-auto px-6 text-center">
+                <div data-aos="fade-up">
+                    <h2 class="text-fluid-h2 font-bold mb-4">チーム紹介</h2>
+                    <div class="w-24 h-1 bg-[#39ff14] mx-auto mb-8"></div>
+                    <p class="text-fluid-body max-w-3xl mx-auto text-gray-300 leading-relaxed mb-12">
+                        三宅DUNKSは、バスケットボールを楽しみながら、技術だけでなく、礼儀やチームワークの大切さを学ぶことを目的としたチームです。初心者から経験者まで、バスケが好きな小学生なら誰でも大歓迎！一緒にコートを走り回り、最高の仲間と最高の思い出を作りましょう！
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div data-aos="fade-up" data-aos-delay="100" class="bg-gray-800 p-8 rounded-lg border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-fluid-h3 font-bold text-[#39ff14] mb-2">活動場所</h3>
+                        <p class="text-fluid-body">福岡市立三宅小学校 体育館</p>
+                    </div>
+                    <div data-aos="fade-up" data-aos-delay="200" class="bg-gray-800 p-8 rounded-lg border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-fluid-h3 font-bold text-[#39ff14] mb-2">練習日</h3>
+                        <p class="text-fluid-body">毎週 月・水・土曜日</p>
+                    </div>
+                    <div data-aos="fade-up" data-aos-delay="300" class="bg-gray-800 p-8 rounded-lg border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2">
+                        <h3 class="text-fluid-h3 font-bold text-[#39ff14] mb-2">対象学年</h3>
+                        <p class="text-fluid-body">小学1年生から6年生の男子</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Practice Section -->
+        <section id="practice" class="py-20 bg-black">
+            <div class="container mx-auto px-6 overflow-hidden">
+                <div data-aos="fade-up">
+                    <h2 class="text-fluid-h2 font-bold text-center mb-4">活動内容</h2>
+                    <div class="w-24 h-1 bg-[#39ff14] mx-auto mb-12"></div>
+                </div>
+                <div class="flex flex-col md:flex-row items-center gap-12">
+                    <div class="md:w-1/2" data-aos="fade-right">
+                        <img src="https://placehold.co/600x400/000000/39ff14?text=Practice" alt="練習風景" class="rounded-lg shadow-2xl w-full">
+                    </div>
+                    <div class="md:w-1/2" data-aos="fade-left">
+                        <h3 class="text-fluid-h3-alt font-bold mb-4 text-[#39ff14]">練習について</h3>
+                        <p class="text-fluid-body text-gray-300 leading-relaxed">
+                            私たちは、バスケットボールの技術指導はもちろんのこと、人としてのマナーを遵守すること、そしてスポーツに一生懸命取り組む姿勢を何よりも大切にしています。「バスケットが上手いから偉い、下手だから偉くない」ということは一切ありません。バスケットボールというチームスポーツを通して、将来大人になった時に役立つ、困難に立ち向かう「強い心」、仲間を思いやる「優しい心」、そしてチームで目標を達成する「達成感」を学んでほしいと願っています。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- News Section -->
+        <section id="news" class="py-20 bg-gray-900">
+            <div class="container mx-auto px-6 text-center">
+                <div data-aos="fade-up">
+                    <h2 class="text-fluid-h2 font-bold mb-4">ニュース</h2>
+                    <div class="w-24 h-1 bg-[#39ff14] mx-auto mb-12"></div>
+                </div>
+                <div class="max-w-4xl mx-auto text-left space-y-6">
+                    <!-- News Item 1 -->
+                    <div data-aos="fade-up" data-aos-delay="100" class="bg-gray-800 p-6 rounded-lg transition-all duration-300 hover:bg-gray-700/50 border-l-4 border-transparent hover:border-[#39ff14]">
+                        <p class="text-sm text-gray-400 mb-1">2025.09.10</p>
+                        <h3 class="text-fluid-item-title font-bold">
+                            <span class="bg-[#39ff14] text-black text-xs font-bold mr-2 px-2.5 py-0.5 rounded-full">試合結果</span>
+                            秋季大会、見事優勝！応援ありがとうございました！
+                        </h3>
+                    </div>
+                    <!-- News Item 2 -->
+                     <div data-aos="fade-up" data-aos-delay="200" class="bg-gray-800 p-6 rounded-lg transition-all duration-300 hover:bg-gray-700/50 border-l-4 border-transparent hover:border-[#39ff14]">
+                        <p class="text-sm text-gray-400 mb-1">2025.09.01</p>
+                        <h3 class="text-fluid-item-title font-bold">
+                             <span class="bg-blue-500 text-white text-xs font-bold mr-2 px-2.5 py-0.5 rounded-full">お知らせ</span>
+                            10月の練習スケジュールを更新しました。
+                        </h3>
+                    </div>
+                    <!-- News Item 3 -->
+                     <div data-aos="fade-up" data-aos-delay="300" class="bg-gray-800 p-6 rounded-lg transition-all duration-300 hover:bg-gray-700/50 border-l-4 border-transparent hover:border-[#39ff14]">
+                        <p class="text-sm text-gray-400 mb-1">2025.08.20</p>
+                        <h3 class="text-fluid-item-title font-bold">
+                            <span class="bg-yellow-500 text-black text-xs font-bold mr-2 px-2.5 py-0.5 rounded-full">イベント</span>
+                            夏合宿の写真をギャラリーページに追加しました。
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Members Section -->
+        <section id="members" class="py-20 bg-black">
+            <div class="container mx-auto px-6 text-center">
+                <div data-aos="fade-up">
+                    <h2 class="text-fluid-h2 font-bold mb-4">メンバー紹介</h2>
+                    <div class="w-24 h-1 bg-[#39ff14] mx-auto mb-12"></div>
+                </div>
+                <!-- Swiper -->
+                <div class="swiper-container member-swiper relative" data-aos="fade-up" data-aos-delay="200">
+                    <div class="swiper-wrapper">
+                        <!-- Member Card 1 -->
+                        <div class="swiper-slide">
+                            <div class="bg-gray-800 rounded-lg p-6 text-center border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 h-full">
+                                <img src="https://placehold.co/200x200/000000/FFFFFF?text=6" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-700">
+                                <h3 class="text-fluid-item-title font-bold text-[#39ff14]">山田 太郎</h3>
+                                <p class="text-gray-400">6年生 / キャプテン</p>
+                                <p class="mt-2 text-sm italic">"チームを勝利に導きます！"</p>
+                            </div>
+                        </div>
+                        <!-- Member Card 2 -->
+                        <div class="swiper-slide">
+                            <div class="bg-gray-800 rounded-lg p-6 text-center border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 h-full">
+                                <img src="https://placehold.co/200x200/111827/FFFFFF?text=5" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-700">
+                                <h3 class="text-fluid-item-title font-bold text-[#39ff14]">山田 太郎</h3>
+                                <p class="text-gray-400">5年生 / シューター</p>
+                                <p class="mt-2 text-sm italic">"3ポイントシュートが得意です！"</p>
+                            </div>
+                        </div>
+                        <!-- Member Card 3 -->
+                        <div class="swiper-slide">
+                             <div class="bg-gray-800 rounded-lg p-6 text-center border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 h-full">
+                                <img src="https://placehold.co/200x200/000000/FFFFFF?text=4" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-700">
+                                <h3 class="text-fluid-item-title font-bold text-[#39ff14]">山田 太郎</h3>
+                                <p class="text-gray-400">4年生 / ポイントガード</p>
+                                <p class="mt-2 text-sm italic">"速いドリブルでチャンスを作る！"</p>
+                            </div>
+                        </div>
+                        <!-- Member Card 4 -->
+                        <div class="swiper-slide">
+                            <div class="bg-gray-800 rounded-lg p-6 text-center border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 h-full">
+                                <img src="https://placehold.co/200x200/111827/FFFFFF?text=7" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-700">
+                                <h3 class="text-fluid-item-title font-bold text-[#39ff14]">山田 太郎</h3>
+                                <p class="text-gray-400">6年生 / センター</p>
+                                <p class="mt-2 text-sm italic">"リバウンドは誰にも負けない！"</p>
+                            </div>
+                        </div>
+                        <!-- Member Card 5 -->
+                        <div class="swiper-slide">
+                            <div class="bg-gray-800 rounded-lg p-6 text-center border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 h-full">
+                                <img src="https://placehold.co/200x200/000000/FFFFFF?text=8" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-700">
+                                <h3 class="text-fluid-item-title font-bold text-[#39ff14]">山田 太郎</h3>
+                                <p class="text-gray-400">6年生 / フォワード</p>
+                                <p class="mt-2 text-sm italic">"最後まで諦めずに走ります！"</p>
+                            </div>
+                        </div>
+                        <!-- Member Card 6 -->
+                        <div class="swiper-slide">
+                            <div class="bg-gray-800 rounded-lg p-6 text-center border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 h-full">
+                                <img src="https://placehold.co/200x200/111827/FFFFFF?text=9" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-700">
+                                <h3 class="text-fluid-item-title font-bold text-[#39ff14]">山田 太郎</h3>
+                                <p class="text-gray-400">5年生 / ガード</p>
+                                <p class="mt-2 text-sm italic">"アシストでチームを助ける！"</p>
+                            </div>
+                        </div>
+                        <!-- Member Card 7 -->
+                        <div class="swiper-slide">
+                            <div class="bg-gray-800 rounded-lg p-6 text-center border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 h-full">
+                                <img src="https://placehold.co/200x200/000000/FFFFFF?text=10" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-700">
+                                <h3 class="text-fluid-item-title font-bold text-[#39ff14]">山田 太郎</h3>
+                                <p class="text-gray-400">5年生 / スモールフォワード</p>
+                                <p class="mt-2 text-sm italic">"カットインで得点します！"</p>
+                            </div>
+                        </div>
+                        <!-- Member Card 8 -->
+                        <div class="swiper-slide">
+                            <div class="bg-gray-800 rounded-lg p-6 text-center border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 h-full">
+                                <img src="https://placehold.co/200x200/111827/FFFFFF?text=11" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-700">
+                                <h3 class="text-fluid-item-title font-bold text-[#39ff14]">山田 太郎</h3>
+                                <p class="text-gray-400">5年生 / シューティングガード</p>
+                                <p class="mt-2 text-sm italic">"どこからでもシュートを狙う！"</p>
+                            </div>
+                        </div>
+                        <!-- Member Card 9 -->
+                        <div class="swiper-slide">
+                            <div class="bg-gray-800 rounded-lg p-6 text-center border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 h-full">
+                                <img src="https://placehold.co/200x200/000000/FFFFFF?text=12" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-700">
+                                <h3 class="text-fluid-item-title font-bold text-[#39ff14]">山田 太郎</h3>
+                                <p class="text-gray-400">4年生 / パワーフォワード</p>
+                                <p class="mt-2 text-sm italic">"力強いプレーを見てください！"</p>
+                            </div>
+                        </div>
+                        <!-- Member Card 10 -->
+                        <div class="swiper-slide">
+                            <div class="bg-gray-800 rounded-lg p-6 text-center border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 h-full">
+                                <img src="https://placehold.co/200x200/111827/FFFFFF?text=13" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-700">
+                                <h3 class="text-fluid-item-title font-bold text-[#39ff14]">山田 太郎</h3>
+                                <p class="text-gray-400">4年生 / ポイントガード</p>
+                                <p class="mt-2 text-sm italic">"ゲームをコントロールする！"</p>
+                            </div>
+                        </div>
+                        <!-- Member Card 11 -->
+                        <div class="swiper-slide">
+                            <div class="bg-gray-800 rounded-lg p-6 text-center border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 h-full">
+                                <img src="https://placehold.co/200x200/000000/FFFFFF?text=14" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-700">
+                                <h3 class="text-fluid-item-title font-bold text-[#39ff14]">山田 太郎</h3>
+                                <p class="text-gray-400">4年生 / センター</p>
+                                <p class="mt-2 text-sm italic">"ゴール下は任せてください！"</p>
+                            </div>
+                        </div>
+                        <!-- Member Card 12 -->
+                        <div class="swiper-slide">
+                            <div class="bg-gray-800 rounded-lg p-6 text-center border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 h-full">
+                                <img src="https://placehold.co/200x200/111827/FFFFFF?text=15" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-700">
+                                <h3 class="text-fluid-item-title font-bold text-[#39ff14]">山田 太郎</h3>
+                                <p class="text-gray-400">3年生 / フォワード</p>
+                                <p class="mt-2 text-sm italic">"たくさん走って頑張ります！"</p>
+                            </div>
+                        </div>
+                        <!-- Member Card 13 -->
+                        <div class="swiper-slide">
+                            <div class="bg-gray-800 rounded-lg p-6 text-center border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 h-full">
+                                <img src="https://placehold.co/200x200/000000/FFFFFF?text=16" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-700">
+                                <h3 class="text-fluid-item-title font-bold text-[#39ff14]">山田 太郎</h3>
+                                <p class="text-gray-400">3年生 / ガード</p>
+                                <p class="mt-2 text-sm italic">"ディフェンスが得意です！"</p>
+                            </div>
+                        </div>
+                        <!-- Member Card 14 -->
+                        <div class="swiper-slide">
+                            <div class="bg-gray-800 rounded-lg p-6 text-center border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 h-full">
+                                <img src="https://placehold.co/200x200/111827/FFFFFF?text=17" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-700">
+                                <h3 class="text-fluid-item-title font-bold text-[#39ff14]">山田 太郎</h3>
+                                <p class="text-gray-400">3年生 / フォワード</p>
+                                <p class="mt-2 text-sm italic">"全力プレーで貢献します！"</p>
+                            </div>
+                        </div>
+                        <!-- Member Card 15 -->
+                        <div class="swiper-slide">
+                            <div class="bg-gray-800 rounded-lg p-6 text-center border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 h-full">
+                                <img src="https://placehold.co/200x200/000000/FFFFFF?text=18" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-700">
+                                <h3 class="text-fluid-item-title font-bold text-[#39ff14]">山田 太郎</h3>
+                                <p class="text-gray-400">2年生 / ガード</p>
+                                <p class="mt-2 text-sm italic">"ドリブル練習中！"</p>
+                            </div>
+                        </div>
+                        <!-- Member Card 16 -->
+                        <div class="swiper-slide">
+                            <div class="bg-gray-800 rounded-lg p-6 text-center border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 h-full">
+                                <img src="https://placehold.co/200x200/111827/FFFFFF?text=19" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-700">
+                                <h3 class="text-fluid-item-title font-bold text-[#39ff14]">山田 太郎</h3>
+                                <p class="text-gray-400">2年生 / フォワード</p>
+                                <p class="mt-2 text-sm italic">"シュート決めたいな！"</p>
+                            </div>
+                        </div>
+                        <!-- Member Card 17 -->
+                        <div class="swiper-slide">
+                            <div class="bg-gray-800 rounded-lg p-6 text-center border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 h-full">
+                                <img src="https://placehold.co/200x200/000000/FFFFFF?text=20" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-700">
+                                <h3 class="text-fluid-item-title font-bold text-[#39ff14]">山田 太郎</h3>
+                                <p class="text-gray-400">2年生 / ガード</p>
+                                <p class="mt-2 text-sm italic">"パスを頑張ります！"</p>
+                            </div>
+                        </div>
+                        <!-- Member Card 18 -->
+                        <div class="swiper-slide">
+                            <div class="bg-gray-800 rounded-lg p-6 text-center border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 h-full">
+                                <img src="https://placehold.co/200x200/111827/FFFFFF?text=21" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-700">
+                                <h3 class="text-fluid-item-title font-bold text-[#39ff14]">山田 太郎</h3>
+                                <p class="text-gray-400">1年生 / フォワード</p>
+                                <p class="mt-2 text-sm italic">"バスケ大好き！"</p>
+                            </div>
+                        </div>
+                        <!-- Member Card 19 -->
+                        <div class="swiper-slide">
+                            <div class="bg-gray-800 rounded-lg p-6 text-center border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 h-full">
+                                <img src="https://placehold.co/200x200/000000/FFFFFF?text=22" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-700">
+                                <h3 class="text-fluid-item-title font-bold text-[#39ff14]">山田 太郎</h3>
+                                <p class="text-gray-400">1年生 / ガード</p>
+                                <p class="mt-2 text-sm italic">"一生懸命走ります！"</p>
+                            </div>
+                        </div>
+                        <!-- Member Card 20 -->
+                        <div class="swiper-slide">
+                            <div class="bg-gray-800 rounded-lg p-6 text-center border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 h-full">
+                                <img src="https://placehold.co/200x200/111827/FFFFFF?text=23" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-700">
+                                <h3 class="text-fluid-item-title font-bold text-[#39ff14]">山田 太郎</h3>
+                                <p class="text-gray-400">1年生 / ガード</p>
+                                <p class="mt-2 text-sm italic">"早く試合に出たい！"</p>
+                            </div>
+                        </div>
+                        <!-- Member Card (Recruitment) -->
+                        <div class="swiper-slide">
+                            <div class="bg-gray-800 rounded-lg p-6 text-center border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 h-full">
+                                <img src="https://placehold.co/200x200/111827/FFFFFF?text=+" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-gray-700 flex items-center justify-center">
+                                <h3 class="text-fluid-item-title font-bold text-[#39ff14]">メンバー募集中</h3>
+                                <p class="text-gray-400">全学年</p>
+                                <p class="mt-2 text-sm italic">"君の参加を待っている！"</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Add Pagination -->
+                    <div class="swiper-pagination"></div>
+                    <!-- Add Navigation -->
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sponsors Section -->
+        <section id="sponsors" class="py-20 bg-gray-900">
+            <div class="container mx-auto px-6 text-center">
+                <div data-aos="fade-up">
+                    <h2 class="text-fluid-h2 font-bold mb-4">スポンサー様募集</h2>
+                    <div class="w-24 h-1 bg-[#39ff14] mx-auto mb-12"></div>
+                    <p class="text-fluid-body max-w-3xl mx-auto text-gray-300 leading-relaxed mb-12">
+                        三宅DUNKSは、子どもたちの成長を支え、バスケットボールを通じて地域社会に貢献することを目指しています。
+                        チームの運営費（遠征費、用具購入費など）をサポートしてくださる企業様・個人様を募集しております。
+                        子どもたちの夢を、一緒に応援していただけませんか。ご支援いただいた企業様には、ウェブサイトへのロゴ掲載などでお応えさせていただきます。
+                    </p>
+                </div>
+                <div class="max-w-4xl mx-auto bg-gray-800 p-8 rounded-lg border-2 border-gray-700" data-aos="zoom-in-up">
+                     <h3 class="text-fluid-h3 font-bold text-[#39ff14] mb-6">ご支援のお願い</h3>
+                     <p class="text-fluid-body text-gray-300 mb-8">
+                         皆様のご支援が、子どもたちがバスケットボールに打ち込むための大きな力となります。
+                         ご興味を持っていただけましたら、ぜひ下記よりお問い合わせください。
+                     </p>
+                     <a href="#contact" class="text-fluid-button bg-[#39ff14] text-black font-bold py-3 px-8 rounded-full hover:bg-white transition-all duration-300 transform hover:scale-105 inline-block">
+                        ご支援・お問い合わせはこちら
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-20 bg-pattern">
+            <div class="container mx-auto px-6 text-center">
+                <div data-aos="fade-up">
+                    <h2 class="text-fluid-h2 font-bold mb-4">メンバー募集中！</h2>
+                    <div class="w-24 h-1 bg-[#39ff14] mx-auto mb-8"></div>
+                    <p class="text-fluid-body max-w-2xl mx-auto text-gray-300 leading-relaxed mb-8">
+                        三宅DUNKSでは、新しい仲間をいつでも募集しています！<br>
+                        バスケットボールに興味がある小学生のみなさん、ぜひ一度体育館に遊びに来てください。<br>
+                        見学・体験は随時受け付けています。お気軽にお問い合わせください。
+                    </p>
+                </div>
+                <a href="mailto:info@miyake-dunks.example.com" class="text-fluid-button-lg bg-[#39ff14] text-black font-bold py-4 px-10 rounded-full hover:bg-white transition-all duration-300 transform hover:scale-105 inline-block" data-aos="fade-up" data-aos-delay="200">
+                    メールでお問い合わせ
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black text-center p-6">
+        <p class="text-gray-400">&copy; 2025 三宅DUNKS. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Swiper.jsのJS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <!-- AOSのJS -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        // AOS initialization
+        AOS.init({
+            duration: 800, // アニメーションの長さ
+            once: true, // アニメーションを1回だけ実行
+        });
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('menu-open');
+            mobileMenuButton.classList.toggle('open');
+        });
+
+        // Close mobile menu when a link is clicked
+        const mobileMenuLinks = mobileMenu.getElementsByTagName('a');
+        for (let i = 0; i < mobileMenuLinks.length; i++) {
+            mobileMenuLinks[i].addEventListener('click', () => {
+                mobileMenu.classList.remove('menu-open');
+                mobileMenuButton.classList.remove('open');
+            });
+        }
+
+        // Swiper.js initialization
+        var swiper = new Swiper(".member-swiper", {
+            slidesPerView: 1,
+            spaceBetween: 30,
+            loop: true,
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            breakpoints: {
+                // 画面幅640px以上で2枚表示
+                640: {
+                    slidesPerView: 2,
+                    spaceBetween: 20,
+                },
+                // 画面幅1024px以上で3枚表示
+                1024: {
+                    slidesPerView: 3,
+                    spaceBetween: 30,
+                },
+            },
+        });
+    </script>
+</body>
+</html>
+
+
