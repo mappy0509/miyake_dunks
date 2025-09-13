@@ -16,6 +16,7 @@
             scroll-behavior: smooth;
             overflow-x: hidden; /* この一行で横スクロールを防止 */
             width: 100%;
+            background-color: #111827; /* 背景色を統一 */
         }
         .hero-bg {
             /* [体育館のバスケットボールコートの画像] */
@@ -81,6 +82,70 @@
             transform: translateY(-6px) rotate(-45deg);
         }
 
+        /* --- スポンサーロゴのアニメーション --- */
+        .logos-container {
+            padding: 20px 0;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+        .logos-container::before,
+        .logos-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 100px; /* フェードアウトの幅 */
+            height: 100%;
+            z-index: 2;
+        }
+        .logos-container::before {
+            left: 0;
+            background: linear-gradient(to left, rgba(17, 24, 39, 0), #111827);
+        }
+        .logos-container::after {
+            right: 0;
+            background: linear-gradient(to right, rgba(17, 24, 39, 0), #111827);
+        }
+        .logos-scroller {
+            display: flex;
+            width: fit-content;
+        }
+        .logos-scroller:hover .logos-list {
+            animation-play-state: paused;
+        }
+        .logos-list {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            animation: scroll 40s linear infinite;
+        }
+        .logos-list li {
+            margin-right: 50px; /* ロゴ間の間隔 */
+        }
+        .logos-list img {
+            height: 48px; /* ロゴの高さ */
+            max-width: none;
+            width: auto;
+            filter: grayscale(100%);
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+        .logos-list li:hover img {
+            filter: grayscale(0%);
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+
+        @keyframes scroll {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-100%);
+            }
+        }
+
         /* --- スマホ表示用のヒーロー背景 --- */
         @media (max-width: 768px) {
             .hero-bg {
@@ -142,27 +207,66 @@
                 </a>
             </div>
         </section>
+        
+        <!-- Partners Section -->
+        <section class="py-4 bg-black">
+            <div class="container mx-auto">
+                 <div class="logos-container">
+                    <div class="logos-scroller">
+                        <ul class="logos-list">
+                            <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+1" alt="スポンサーロゴ 1" /></li>
+                            <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+2" alt="スポンサーロゴ 2" /></li>
+                            <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+3" alt="スポンサーロゴ 3" /></li>
+                            <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+4" alt="スポンサーロゴ 4" /></li>
+                            <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+5" alt="スポンサーロゴ 5" /></li>
+                            <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+6" alt="スポンサーロゴ 6" /></li>
+                            <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+7" alt="スポンサーロゴ 7" /></li>
+                            <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+8" alt="スポンサーロゴ 8" /></li>
+                        </ul>
+                        <ul class="logos-list" aria-hidden="true">
+                            <!-- Duplicate for seamless loop -->
+                            <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+1" alt="スポンサーロゴ 1" /></li>
+                            <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+2" alt="スポンサーロゴ 2" /></li>
+                            <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+3" alt="スポンサーロゴ 3" /></li>
+                            <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+4" alt="スポンサーロゴ 4" /></li>
+                            <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+5" alt="スポンサーロゴ 5" /></li>
+                            <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+6" alt="スポンサーロゴ 6" /></li>
+                            <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+7" alt="スポンサーロゴ 7" /></li>
+                            <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+8" alt="スポンサーロゴ 8" /></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
 
         <!-- About Section -->
         <section id="about" class="py-20 bg-gray-900">
-            <div class="container mx-auto px-6 text-center">
-                <div data-aos="fade-up">
+            <div class="container mx-auto px-6">
+                <div class="text-center" data-aos="fade-up">
                     <h2 class="text-fluid-h2 font-bold mb-4">チーム紹介</h2>
-                    <div class="w-24 h-1 bg-[#39ff14] mx-auto mb-8"></div>
-                    <p class="text-fluid-body max-w-3xl mx-auto text-gray-300 leading-relaxed mb-12">
-                        三宅DUNKSは、バスケットボールを楽しみながら、技術だけでなく、礼儀やチームワークの大切さを学ぶことを目的としたチームです。初心者から経験者まで、バスケが好きな小学生なら誰でも大歓迎！一緒にコートを走り回り、最高の仲間と最高の思い出を作りましょう！
-                    </p>
+                    <div class="w-24 h-1 bg-[#39ff14] mx-auto mb-12"></div>
+                </div>
+                <div class="flex flex-col md:flex-row-reverse items-center gap-12 mb-16">
+                    <div class="md:w-1/2" data-aos="fade-left">
+                        <img src="img/team.jpg" alt="チーム写真" class="rounded-lg shadow-2xl w-full">
+                    </div>
+                    <div class="md:w-1/2" data-aos="fade-right">
+                        <p class="text-fluid-body text-gray-300 leading-relaxed text-center md:text-left">
+                            三宅DUNKSは、バスケットボールを楽しみながら、技術だけでなく、礼儀やチームワークの大切さを学ぶことを目的としたチームです。初心者から経験者まで、バスケが好きな小学生なら誰でも大歓迎！一緒にコートを走り回り、最高の仲間と最高の思い出を作りましょう！
+                        </p>
+                    </div>
                 </div>
                 <div class="grid md:grid-cols-3 gap-8">
-                    <div data-aos="fade-up" data-aos-delay="100" class="bg-gray-800 p-8 rounded-lg border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2">
+                    <div data-aos="fade-up" data-aos-delay="100" class="bg-gray-800 p-8 rounded-lg border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 text-center">
                         <h3 class="text-fluid-h3 font-bold text-[#39ff14] mb-2">活動場所</h3>
                         <p class="text-fluid-body">福岡市立三宅小学校 体育館</p>
                     </div>
-                    <div data-aos="fade-up" data-aos-delay="200" class="bg-gray-800 p-8 rounded-lg border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2">
+                    <div data-aos="fade-up" data-aos-delay="200" class="bg-gray-800 p-8 rounded-lg border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 text-center">
                         <h3 class="text-fluid-h3 font-bold text-[#39ff14] mb-2">練習日</h3>
                         <p class="text-fluid-body">毎週 月・水・土曜日</p>
                     </div>
-                    <div data-aos="fade-up" data-aos-delay="300" class="bg-gray-800 p-8 rounded-lg border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2">
+                    <div data-aos="fade-up" data-aos-delay="300" class="bg-gray-800 p-8 rounded-lg border-2 border-gray-700 hover:border-[#39ff14] transition-all duration-300 transform hover:-translate-y-2 text-center">
                         <h3 class="text-fluid-h3 font-bold text-[#39ff14] mb-2">対象学年</h3>
                         <p class="text-fluid-body">小学1年生から6年生の男子</p>
                     </div>
@@ -204,7 +308,7 @@
                         <p class="text-sm text-gray-400 mb-1">2025.09.10</p>
                         <h3 class="text-fluid-item-title font-bold">
                             <span class="bg-[#39ff14] text-black text-xs font-bold mr-2 px-2.5 py-0.5 rounded-full">試合結果</span>
-                            秋季大会、見事優勝！応援ありがとうございました！
+                            秋季大会、応援ありがとうございました！
                         </h3>
                     </div>
                     <!-- News Item 2 -->
@@ -442,13 +546,43 @@
                 <div data-aos="fade-up">
                     <h2 class="text-fluid-h2 font-bold mb-4">スポンサー様募集</h2>
                     <div class="w-24 h-1 bg-[#39ff14] mx-auto mb-12"></div>
-                    <p class="text-fluid-body max-w-3xl mx-auto text-gray-300 leading-relaxed mb-12">
+                    <p class="text-fluid-body max-w-3xl mx-auto text-gray-300 leading-relaxed">
                         三宅DUNKSは、子どもたちの成長を支え、バスケットボールを通じて地域社会に貢献することを目指しています。
                         チームの運営費（遠征費、用具購入費など）をサポートしてくださる企業様・個人様を募集しております。
                         子どもたちの夢を、一緒に応援していただけませんか。ご支援いただいた企業様には、ウェブサイトへのロゴ掲載などでお応えさせていただきます。
                     </p>
                 </div>
-                <div class="max-w-4xl mx-auto bg-gray-800 p-8 rounded-lg border-2 border-gray-700" data-aos="zoom-in-up">
+                <!-- Sponsor Logos -->
+                <div class="mt-8" data-aos="fade-up">
+                    <h3 class="text-fluid-h3-alt font-bold text-white mb-4">ご支援いただいている企業様</h3>
+                    <div class="logos-container">
+                        <div class="logos-scroller">
+                            <ul class="logos-list">
+                                <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+1" alt="スポンサーロゴ 1" /></li>
+                                <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+2" alt="スポンサーロゴ 2" /></li>
+                                <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+3" alt="スポンサーロゴ 3" /></li>
+                                <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+4" alt="スポンサーロゴ 4" /></li>
+                                <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+5" alt="スポンサーロゴ 5" /></li>
+                                <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+6" alt="スポンサーロゴ 6" /></li>
+                                <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+7" alt="スポンサーロゴ 7" /></li>
+                                <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+8" alt="スポンサーロゴ 8" /></li>
+                            </ul>
+                            <ul class="logos-list" aria-hidden="true">
+                                <!-- Duplicate for seamless loop -->
+                                <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+1" alt="スポンサーロゴ 1" /></li>
+                                <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+2" alt="スポンサーロゴ 2" /></li>
+                                <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+3" alt="スポンサーロゴ 3" /></li>
+                                <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+4" alt="スポンサーロゴ 4" /></li>
+                                <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+5" alt="スポンサーロゴ 5" /></li>
+                                <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+6" alt="スポンサーロゴ 6" /></li>
+                                <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+7" alt="スポンサーロゴ 7" /></li>
+                                <li><img src="httpshttps://placehold.co/150x50/FFFFFF/111827?text=Sponsor+8" alt="スポンサーロゴ 8" /></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="max-w-4xl mx-auto bg-gray-800 p-8 rounded-lg border-2 border-gray-700 mt-16" data-aos="zoom-in-up">
                      <h3 class="text-fluid-h3 font-bold text-[#39ff14] mb-6">ご支援のお願い</h3>
                      <p class="text-fluid-body text-gray-300 mb-8">
                          皆様のご支援が、子どもたちがバスケットボールに打ち込むための大きな力となります。
