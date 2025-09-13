@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ニュース管理ページ | 三宅DUNKS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827;
+            color: white;
+        }
+        .form-input, .form-select {
+            background-color: #1f2937;
+            border-color: #4b5563;
+            color: white;
+        }
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            ring: 2px;
+            ring-color: #39ff14;
+            border-color: #39ff14;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+
+    <div class="container mx-auto p-8">
+        <h1 class="text-3xl font-bold mb-2 text-center">ニュース管理ページ</h1>
+        <p class="text-center text-gray-400 mb-8">三宅DUNKS 公式サイトのニュースを更新します。</p>
+
+        <!-- News Addition Form -->
+        <section class="mb-12 bg-gray-800 p-8 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-bold mb-6 text-[#39ff14]">新しいニュースを追加</h2>
+            <form id="add-news-form" class="space-y-4">
+                <div>
+                    <label for="news-title" class="block mb-2 text-sm font-medium text-gray-300">タイトル</label>
+                    <input type="text" id="news-title" class="form-input w-full p-2.5 rounded-lg" placeholder="秋季大会、優勝！" required>
+                </div>
+                <div>
+                    <label for="news-date" class="block mb-2 text-sm font-medium text-gray-300">日付</label>
+                    <input type="date" id="news-date" class="form-input w-full p-2.5 rounded-lg" required>
+                </div>
+                <div>
+                    <label for="news-category" class="block mb-2 text-sm font-medium text-gray-300">カテゴリー</label>
+                    <select id="news-category" class="form-select w-full p-2.5 rounded-lg">
+                        <option>試合結果</option>
+                        <option>お知らせ</option>
+                        <option>イベント</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-[#39ff14] text-black font-bold py-3 px-5 rounded-lg hover:bg-white transition-colors duration-300">
+                    ニュースを追加
+                </button>
+            </form>
+        </section>
+
+        <!-- Existing News List -->
+        <section>
+            <h2 class="text-2xl font-bold mb-6 text-center text-[#39ff14]">ニュース一覧</h2>
+            <div id="admin-news-list" class="space-y-4">
+                <!-- ニュースがここに動的に表示されます -->
+                <p class="text-center text-gray-400">ニュースを読み込んでいます...</p>
+            </div>
+        </section>
+        
+        <div class="text-center mt-12">
+            <a href="miyake_dunks_website.html" class="text-gray-400 hover:text-[#39ff14] transition-colors">&larr; 公式サイトに戻る</a>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        try {
+            // --- Firebase Initialization (More Robust) ---
+            let firebaseConfig;
+            try {
+                if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                    firebaseConfig = JSON.parse(__firebase_config);
+                } else {
+                    throw new Error("Firebase config is not defined");
+                }
+            } catch (e) {
+                console.error("Firebase config parsing failed. Using fallback.", e);
+                firebaseConfig = { projectId: "YOUR_PROJECT_ID" }; // Fallback
+            }
+            
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const db = getFirestore(app);
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+            // --- Authentication ---
+            const signIn = async () => {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            };
+
+            const newsCollectionRef = collection(db, `/artifacts/${appId}/public/data/news`);
+
+            // --- Add News ---
+            const addNewsForm = document.getElementById('add-news-form');
+            addNewsForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const title = document.getElementById('news-title').value;
+                const dateInput = document.getElementById('news-date').value;
+                const category = document.getElementById('news-category').value;
+
+                if (!dateInput) {
+                    alert('日付を入力してください。');
+                    return;
+                }
+
+                try {
+                    await addDoc(newsCollectionRef, {
+                        title: title,
+                        date: dateInput,
+                        category: category,
+                        createdAt: serverTimestamp() // 並び替えのためのタイムスタンプ
+                    });
+                    addNewsForm.reset();
+                } catch (error) {
+                    console.error("ニュースの追加に失敗しました: ", error);
+                    alert("エラーが発生しました。ニュースを追加できませんでした。");
+                }
+            });
+
+            // --- Render and Delete News ---
+            const adminNewsList = document.getElementById('admin-news-list');
+            const renderAdminNews = (docs) => {
+                adminNewsList.innerHTML = '';
+                if (!docs || docs.length === 0) {
+                    adminNewsList.innerHTML = '<p class="text-center text-gray-400">まだニュースはありません。</p>';
+                    return;
+                }
+                const sortedDocs = docs.sort((a, b) => {
+                    const timeA = a.data().createdAt?.toMillis() || 0;
+                    const timeB = b.data().createdAt?.toMillis() || 0;
+                    return timeB - timeA;
+                });
+                sortedDocs.forEach(docSnap => {
+                    const news = docSnap.data();
+                    const newsId = docSnap.id;
+                    const item = document.createElement('div');
+                    item.className = 'bg-gray-800 p-4 rounded-lg flex justify-between items-center';
+                    item.innerHTML = `
+                        <div>
+                            <p class="text-xs text-gray-400">${news.date} [${news.category}]</p>
+                            <p>${news.title}</p>
+                        </div>
+                        <button data-id="${newsId}" class="delete-btn bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700 transition-colors">削除</button>
+                    `;
+                    adminNewsList.appendChild(item);
+                });
+
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', async (e) => {
+                        const idToDelete = e.target.dataset.id;
+                        if (confirm('このニュースを本当に削除しますか？')) {
+                            try {
+                                const docRef = doc(db, `/artifacts/${appId}/public/data/news`, idToDelete);
+                                await deleteDoc(docRef);
+                            } catch (error) {
+                                console.error("ニュースの削除に失敗しました: ", error);
+                                alert("エラーが発生しました。ニュースを削除できませんでした。");
+                            }
+                        }
+                    });
+                });
+            };
+
+            // --- Main Execution ---
+            signIn().then(() => {
+                onSnapshot(newsCollectionRef, (snapshot) => {
+                    renderAdminNews(snapshot.docs);
+                }, (error) => {
+                    console.error("ニュースの取得に失敗しました: ", error);
+                    adminNewsList.innerHTML = '<p class="text-center text-red-500">ニュースの読み込み中にエラーが発生しました。</p>';
+                });
+            });
+        } catch(e) {
+            console.error("A critical error occurred:", e);
+            document.body.innerHTML = '<div class="text-center text-red-500 p-8">管理ページの読み込みに失敗しました。</div>';
+        }
+    </script>
+</body>
+</html>
+

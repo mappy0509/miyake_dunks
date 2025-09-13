@@ -249,7 +249,7 @@
                 </div>
                 <div class="flex flex-col md:flex-row-reverse items-center gap-12 mb-16">
                     <div class="md:w-1/2" data-aos="fade-left">
-                        <img src="img/team.jpg" alt="チーム写真" class="rounded-lg shadow-2xl w-full">
+                        <img src="https://images.unsplash.com/photo-1612871689353-cccf581d8ec4?q=80&w=2070&auto=format&fit=crop" alt="チーム写真" class="rounded-lg shadow-2xl w-full">
                     </div>
                     <div class="md:w-1/2" data-aos="fade-right">
                         <p class="text-fluid-body text-gray-300 leading-relaxed text-center md:text-left">
@@ -302,30 +302,11 @@
                     <h2 class="text-fluid-h2 font-bold mb-4">ニュース</h2>
                     <div class="w-24 h-1 bg-[#39ff14] mx-auto mb-12"></div>
                 </div>
-                <div class="max-w-4xl mx-auto text-left space-y-6">
-                    <!-- News Item 1 -->
-                    <div data-aos="fade-up" data-aos-delay="100" class="bg-gray-800 p-6 rounded-lg transition-all duration-300 hover:bg-gray-700/50 border-l-4 border-transparent hover:border-[#39ff14]">
-                        <p class="text-sm text-gray-400 mb-1">2025.09.10</p>
-                        <h3 class="text-fluid-item-title font-bold">
-                            <span class="bg-[#39ff14] text-black text-xs font-bold mr-2 px-2.5 py-0.5 rounded-full">試合結果</span>
-                            秋季大会、応援ありがとうございました！
-                        </h3>
-                    </div>
-                    <!-- News Item 2 -->
-                     <div data-aos="fade-up" data-aos-delay="200" class="bg-gray-800 p-6 rounded-lg transition-all duration-300 hover:bg-gray-700/50 border-l-4 border-transparent hover:border-[#39ff14]">
-                        <p class="text-sm text-gray-400 mb-1">2025.09.01</p>
-                        <h3 class="text-fluid-item-title font-bold">
-                             <span class="bg-blue-500 text-white text-xs font-bold mr-2 px-2.5 py-0.5 rounded-full">お知らせ</span>
-                            10月の練習スケジュールを更新しました。
-                        </h3>
-                    </div>
-                    <!-- News Item 3 -->
-                     <div data-aos="fade-up" data-aos-delay="300" class="bg-gray-800 p-6 rounded-lg transition-all duration-300 hover:bg-gray-700/50 border-l-4 border-transparent hover:border-[#39ff14]">
-                        <p class="text-sm text-gray-400 mb-1">2025.08.20</p>
-                        <h3 class="text-fluid-item-title font-bold">
-                            <span class="bg-yellow-500 text-black text-xs font-bold mr-2 px-2.5 py-0.5 rounded-full">イベント</span>
-                            夏合宿の写真をギャラリーページに追加しました。
-                        </h3>
+                <!-- ニュースはここに動的に読み込まれます -->
+                <div id="news-list" class="max-w-4xl mx-auto text-left space-y-6">
+                    <!-- Loading state -->
+                     <div class="text-center text-gray-400">
+                        <p>ニュースを読み込んでいます...</p>
                     </div>
                 </div>
             </div>
@@ -576,7 +557,7 @@
                                 <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+5" alt="スポンサーロゴ 5" /></li>
                                 <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+6" alt="スポンサーロゴ 6" /></li>
                                 <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+7" alt="スポンサーロゴ 7" /></li>
-                                <li><img src="httpshttps://placehold.co/150x50/FFFFFF/111827?text=Sponsor+8" alt="スポンサーロゴ 8" /></li>
+                                <li><img src="https://placehold.co/150x50/FFFFFF/111827?text=Sponsor+8" alt="スポンサーロゴ 8" /></li>
                             </ul>
                         </div>
                     </div>
@@ -617,62 +598,153 @@
     <!-- Footer -->
     <footer class="bg-black text-center p-6">
         <p class="text-gray-400">&copy; 2025 三宅DUNKS. All Rights Reserved.</p>
+        <div class="mt-2">
+            <a href="admin.html" class="text-sm text-gray-600 hover:text-[#39ff14]">管理者ページ</a>
+        </div>
     </footer>
 
     <!-- Swiper.jsのJS -->
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <!-- AOSのJS -->
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script>
-        // AOS initialization
-        AOS.init({
-            duration: 800, // アニメーションの長さ
-            once: true, // アニメーションを1回だけ実行
-        });
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Mobile menu toggle
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('menu-open');
-            mobileMenuButton.classList.toggle('open');
-        });
-
-        // Close mobile menu when a link is clicked
-        const mobileMenuLinks = mobileMenu.getElementsByTagName('a');
-        for (let i = 0; i < mobileMenuLinks.length; i++) {
-            mobileMenuLinks[i].addEventListener('click', () => {
-                mobileMenu.classList.remove('menu-open');
-                mobileMenuButton.classList.remove('open');
+        // --- Frontend Scripts Initialization (Runs First) ---
+        try {
+            AOS.init({
+                duration: 800,
+                once: true,
             });
+
+            new Swiper(".member-swiper", {
+                slidesPerView: 1,
+                spaceBetween: 30,
+                loop: true,
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+                breakpoints: {
+                    640: { slidesPerView: 2, spaceBetween: 20 },
+                    1024: { slidesPerView: 3, spaceBetween: 30 },
+                },
+            });
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('menu-open');
+                mobileMenuButton.classList.toggle('open');
+            });
+
+            const mobileMenuLinks = mobileMenu.getElementsByTagName('a');
+            for (let link of mobileMenuLinks) {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('menu-open');
+                    mobileMenuButton.classList.remove('open');
+                });
+            }
+        } catch (e) {
+            console.error("UI initialization failed:", e);
         }
 
-        // Swiper.js initialization
-        var swiper = new Swiper(".member-swiper", {
-            slidesPerView: 1,
-            spaceBetween: 30,
-            loop: true,
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-            },
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
-            breakpoints: {
-                // 画面幅640px以上で2枚表示
-                640: {
-                    slidesPerView: 2,
-                    spaceBetween: 20,
-                },
-                // 画面幅1024px以上で3枚表示
-                1024: {
-                    slidesPerView: 3,
-                    spaceBetween: 30,
-                },
-            },
-        });
+        // --- Firebase Logic (Runs Separately) ---
+        try {
+            // --- Firebase Initialization (More Robust) ---
+            let firebaseConfig;
+            try {
+                if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                    firebaseConfig = JSON.parse(__firebase_config);
+                } else {
+                    throw new Error("Firebase config is not defined");
+                }
+            } catch (e) {
+                console.error("Firebase config parsing failed. Using fallback.", e);
+                firebaseConfig = { projectId: "YOUR_PROJECT_ID" }; // Fallback
+            }
+
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const db = getFirestore(app);
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+            // --- Authentication ---
+            const signIn = async () => {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            };
+
+            // --- News Rendering ---
+            const newsList = document.getElementById('news-list');
+            const getCategoryClass = (category) => {
+                switch (category) {
+                    case '試合結果': return 'bg-[#39ff14] text-black';
+                    case 'お知らせ': return 'bg-blue-500 text-white';
+                    case 'イベント': return 'bg-yellow-500 text-black';
+                    default: return 'bg-gray-500 text-white';
+                }
+            };
+            const renderNews = (docs) => {
+                newsList.innerHTML = '';
+                if (!docs || docs.length === 0) {
+                    newsList.innerHTML = '<p class="text-center text-gray-400">まだニュースはありません。</p>';
+                    return;
+                }
+                const sortedDocs = docs.sort((a, b) => {
+                    const timeA = a.data().createdAt?.toMillis() || new Date(a.data().date).getTime() || 0;
+                    const timeB = b.data().createdAt?.toMillis() || new Date(b.data().date).getTime() || 0;
+                    return timeB - timeA;
+                });
+                sortedDocs.forEach(doc => {
+                    const news = doc.data();
+                    const newsItem = document.createElement('div');
+                    newsItem.setAttribute('data-aos', 'fade-up');
+                    newsItem.className = 'bg-gray-800 p-6 rounded-lg transition-all duration-300 hover:bg-gray-700/50 border-l-4 border-transparent hover:border-[#39ff14]';
+                    const categoryClass = getCategoryClass(news.category);
+                    newsItem.innerHTML = `
+                        <p class="text-sm text-gray-400 mb-1">${news.date}</p>
+                        <h3 class="text-fluid-item-title font-bold">
+                            <span class="${categoryClass} text-xs font-bold mr-2 px-2.5 py-0.5 rounded-full">${news.category}</span>
+                            ${news.title}
+                        </h3>`;
+                    newsList.appendChild(newsItem);
+                });
+            };
+
+            // --- Main Execution ---
+            const initializeFirebase = async () => {
+                await signIn();
+                const newsCollection = collection(db, `/artifacts/${appId}/public/data/news`);
+                onSnapshot(newsCollection, (snapshot) => {
+                    renderNews(snapshot.docs);
+                }, (error) => {
+                    console.error("ニュースの取得に失敗しました: ", error);
+                    newsList.innerHTML = '<p class="text-center text-red-500">ニュースの読み込み中にエラーが発生しました。</p>';
+                });
+            };
+
+            // Initialize after the DOM is ready
+            document.addEventListener('DOMContentLoaded', initializeFirebase);
+
+        } catch (e) {
+            console.error("A critical error occurred in the Firebase script:", e);
+            const newsList = document.getElementById('news-list');
+            if (newsList) {
+                newsList.innerHTML = '<p class="text-center text-red-500">サイトの読み込みに失敗しました。</p>';
+            }
+        }
     </script>
 </body>
 </html>
